@@ -1,0 +1,2 @@
+test_dir: "ansible_test"
+message: "Hello from Ansible Role!"

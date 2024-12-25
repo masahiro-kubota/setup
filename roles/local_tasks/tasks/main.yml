@@ -1,0 +1,37 @@
+- name: "Execute date command"
+  command: date
+  register: date_output
+
+- name: "Show date output"
+  debug:
+    var: date_output.stdout
+
+- name: "Create test directory"
+  file:
+    path: "{{ test_dir }}"
+    state: directory
+    mode: "{{ dir_mode }}"
+
+- name: "Create test file"
+  copy:
+    content: "{{ message }}\n"
+    dest: "{{ test_dir }}/hello.txt"
+    mode: "{{ file_mode }}"
+
+- name: "List directory contents"
+  shell: "ls -la {{ test_dir }}"
+  register: ls_output
+
+- name: "Show directory contents"
+  debug:
+    var: ls_output.stdout_lines
+
+- name: "Check if file exists"
+  stat:
+    path: "{{ test_dir }}/hello.txt"
+  register: file_check
+
+- name: "Show message if file exists"
+  debug:
+    msg:
+  when: file_check.stat.exists
