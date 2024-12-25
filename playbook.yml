@@ -1,0 +1,45 @@
+- name: "Basic local operations"
+  hosts: localhost
+  tasks:
+    # シンプルなコマンド実行
+    - name: "Execute date command"
+      command: date
+      register: date_output
+    
+    - name: "Show date output"
+      debug:
+        var: date_output.stdout
+
+    # ディレクトリ作成
+    - name: "Create a test directory"
+      file:
+        path: "~/ansible_test"
+        state: directory
+        mode: '0755'
+
+    # ファイル作成
+    - name: "Create a test file"
+      copy:
+        content: "Hello from Ansible!\n"
+        dest: "~/ansible_test/hello.txt"
+        mode: '0644'
+
+    # シェルコマンド実行
+    - name: "List directory contents"
+      shell: "ls -la ~/ansible_test"
+      register: ls_output
+
+    - name: "Show directory contents"
+      debug:
+        var: ls_output.stdout_lines
+
+    # 条件付き実行
+    - name: "Check if file exists"
+      stat:
+        path: "~/ansible_test/hello.txt"
+      register: file_check
+
+    - name: "Show message if file exists"
+      debug:
+        msg: "The file exists!"
+      when: file_check.stat.exists
